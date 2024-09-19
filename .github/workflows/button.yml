@@ -24,7 +24,7 @@ jobs:
           GITHUB_USER: "sixdsix"
           REPO: "SteamDeckCInstaller"
           FORMAT: "tar.gz"
-          VERSION: "0.0.1"
+          VERSION: ${{ steps.get-latest-release.outputs.tag_name }}
           COLOR: "blue"
           BEGIN_TAG: "<!-- BEGIN LATEST DOWNLOAD BUTTON -->"
           END_TAG: "<!-- END LATEST DOWNLOAD BUTTON -->"
