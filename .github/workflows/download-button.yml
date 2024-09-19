@@ -16,19 +16,10 @@ jobs:
         id: get-latest-release
         uses: InsonusK/get-latest-release@v1.0.1
         with:
-          myToken: ${{ secrets.GITHUB_TOKEN }}
+          myToken: ${{ github.token }}
           view_top: 1
 
-      - name: Debugging Information
-        run: |
-          echo "Current directory:"
-          pwd
-          echo "Listing files:"
-          ls -al
-          echo "Showing README.md:"
-          cat README.md
-
-      - name: Update README with Download Button
+      - name: Readme Download Button Action
         env:
           GITHUB_USER: "sixdsix"
           REPO: "SteamDeckCInstaller"
@@ -38,17 +29,8 @@ jobs:
           BEGIN_TAG: "<!-- BEGIN LATEST DOWNLOAD BUTTON -->"
           END_TAG: "<!-- END LATEST DOWNLOAD BUTTON -->"
         run: |
-          # Print current environment variables for debugging
-          echo "BEGIN_TAG: $BEGIN_TAG"
-          echo "END_TAG: $END_TAG"
-          echo "VERSION: $VERSION"
-
-          # Use sed to replace content
-          sed -i "/${BEGIN_TAG}/,/${END_TAG}/c\\${BEGIN_TAG}\n[![Download ${FORMAT}](https://custom-icon-badges.demolab.com/badge/-Download-${COLOR}?style=for-the-badge&logo=download&logoColor=white)](https://github.com/${GITHUB_USER}/${REPO}/archive/${VERSION}.${FORMAT})\n${END_TAG}" README.md
-
-          # Verify changes
-          echo "Updated README.md:"
-          cat README.md
+          UPDATE=$(cat README.md | perl -0777 -pe 's#(${{ env.BEGIN_TAG }})(?:.|\n)*?(${{ env.END_TAG }})#${1}\n[![Download ${{ env.FORMAT }}](https://custom-icon-badges.demolab.com/badge/-Download-${{ env.COLOR }}?style=for-the-badge&logo=download&logoColor=white "Download ${{ env.FORMAT }}")](https://github.com/${{ env.GITHUB_USER }}/${{ env.REPO }}/archive/${{ env.VERSION }}.${{ env.FORMAT }})\n${2}#g')
+          echo "${UPDATE}" > README.md
 
       - uses: EndBug/add-and-commit@v7
         with:
