@@ -16,7 +16,7 @@ jobs:
         id: get-latest-release
         uses: InsonusK/get-latest-release@v1.0.1
         with:
-          myToken: ${{ github.token }}
+          myToken: ${{ secrets.GITHUB_TOKEN }}
           view_top: 1
 
       - name: Readme Download Button Action
@@ -29,7 +29,8 @@ jobs:
           BEGIN_TAG: "<!-- BEGIN LATEST DOWNLOAD BUTTON -->"
           END_TAG: "<!-- END LATEST DOWNLOAD BUTTON -->"
         run: |
-          UPDATE=$(cat README.md | perl -0777 -pe 's#(${{ env.BEGIN_TAG }})(?:.|\n)*?(${{ env.END_TAG }})#${1}\n[![Download ${{ env.FORMAT }}](https://custom-icon-badges.demolab.com/badge/-Download-${{ env.COLOR }}?style=for-the-badge&logo=download&logoColor=white "Download ${{ env.FORMAT }}")](https://github.com/${{ env.GITHUB_USER }}/${{ env.REPO }}/archive/${{ env.VERSION }}.${{ env.FORMAT }})\n${2}#g')
+          # Replace the download button between BEGIN_TAG and END_TAG in README.md
+          UPDATE=$(cat README.md | perl -0777 -pe "s#(${BEGIN_TAG})(?:.|\\n)*?(${END_TAG})#\${1}\n[![Download ${FORMAT}](https://custom-icon-badges.demolab.com/badge/-Download-${COLOR}?style=for-the-badge&logo=download&logoColor=white \"Download ${FORMAT}\")](https://github.com/${GITHUB_USER}/${REPO}/archive/${VERSION}.${FORMAT})\n\${2}#g")
           echo "${UPDATE}" > README.md
 
       - uses: EndBug/add-and-commit@v7
