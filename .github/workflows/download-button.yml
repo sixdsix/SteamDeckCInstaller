@@ -19,7 +19,7 @@ jobs:
           myToken: ${{ secrets.GITHUB_TOKEN }}
           view_top: 1
 
-      - name: Readme Download Button Action
+      - name: Update README with Download Button
         env:
           GITHUB_USER: "sixdsix"
           REPO: "SteamDeckCInstaller"
@@ -29,9 +29,8 @@ jobs:
           BEGIN_TAG: "<!-- BEGIN LATEST DOWNLOAD BUTTON -->"
           END_TAG: "<!-- END LATEST DOWNLOAD BUTTON -->"
         run: |
-          # Replace the download button between BEGIN_TAG and END_TAG in README.md
-          UPDATE=$(cat README.md | perl -0777 -pe "s#(${BEGIN_TAG})(?:.|\\n)*?(${END_TAG})#\${1}\n[![Download ${FORMAT}](https://custom-icon-badges.demolab.com/badge/-Download-${COLOR}?style=for-the-badge&logo=download&logoColor=white \"Download ${FORMAT}\")](https://github.com/${GITHUB_USER}/${REPO}/archive/${VERSION}.${FORMAT})\n\${2}#g")
-          echo "${UPDATE}" > README.md
+          # Use sed to safely replace the content in README.md between BEGIN_TAG and END_TAG
+          sed -i "/${BEGIN_TAG}/,/${END_TAG}/c\\${BEGIN_TAG}\n[![Download ${FORMAT}](https://custom-icon-badges.demolab.com/badge/-Download-${COLOR}?style=for-the-badge&logo=download&logoColor=white)](https://github.com/${GITHUB_USER}/${REPO}/archive/${VERSION}.${FORMAT})\n${END_TAG}" README.md
 
       - uses: EndBug/add-and-commit@v7
         with:
