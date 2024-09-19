@@ -20,6 +20,7 @@ If any isssues arise, please create an issue on the GitHub page, I will address 
 # Download
 
 <!-- BEGIN LATEST DOWNLOAD BUTTON -->
+[![Download tar.gz](https://custom-icon-badges.demolab.com/badge/-Download-blue?style=for-the-badge&logo=download&logoColor=white)](https://github.com/sixdsix/SteamDeckCInstaller/archive/.tar.gz)
 <!-- END LATEST DOWNLOAD BUTTON -->
 
 # Run
