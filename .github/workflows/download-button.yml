@@ -19,6 +19,15 @@ jobs:
           myToken: ${{ secrets.GITHUB_TOKEN }}
           view_top: 1
 
+      - name: Debugging Information
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Listing files:"
+          ls -al
+          echo "Showing README.md:"
+          cat README.md
+
       - name: Update README with Download Button
         env:
           GITHUB_USER: "sixdsix"
@@ -29,8 +38,17 @@ jobs:
           BEGIN_TAG: "<!-- BEGIN LATEST DOWNLOAD BUTTON -->"
           END_TAG: "<!-- END LATEST DOWNLOAD BUTTON -->"
         run: |
-          # Use sed to safely replace the content in README.md between BEGIN_TAG and END_TAG
+          # Print current environment variables for debugging
+          echo "BEGIN_TAG: $BEGIN_TAG"
+          echo "END_TAG: $END_TAG"
+          echo "VERSION: $VERSION"
+
+          # Use sed to replace content
           sed -i "/${BEGIN_TAG}/,/${END_TAG}/c\\${BEGIN_TAG}\n[![Download ${FORMAT}](https://custom-icon-badges.demolab.com/badge/-Download-${COLOR}?style=for-the-badge&logo=download&logoColor=white)](https://github.com/${GITHUB_USER}/${REPO}/archive/${VERSION}.${FORMAT})\n${END_TAG}" README.md
+
+          # Verify changes
+          echo "Updated README.md:"
+          cat README.md
 
       - uses: EndBug/add-and-commit@v7
         with:
